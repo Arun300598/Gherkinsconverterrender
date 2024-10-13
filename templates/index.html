@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gherkin to Step Definition Converter</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css">
+    <script>
+        function copyToClipboard() {
+            const outputElement = document.getElementById('output');
+            navigator.clipboard.writeText(outputElement.innerText).then(() => {
+                alert('Copied to clipboard!');
+            });
+        }
+    </script>
+</head>
+<body>
+    <div class="container mt-5">
+        <h1>Gherkin to Step Definition Converter</h1>
+        <form method="POST">
+            <div class="mb-3">
+                <label for="gherkin_text" class="form-label">Enter Gherkin Feature File:</label>
+                <textarea class="form-control" id="gherkin_text" name="gherkin_text" rows="10">{{ request.form['gherkin_text'] }}</textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Generate Step Definitions</button>
+        </form>
+        <h2 class="mt-4">Generated Step Definitions:</h2>
+        <pre id="output">{{ output }}</pre>
+        <button class="btn btn-secondary mt-3" onclick="copyToClipboard()">Copy to Clipboard</button>
+    </div>
+</body>
+</html>
