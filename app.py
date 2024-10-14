@@ -32,14 +32,14 @@ def generate_step_definitions(gherkin_text):
                 continue  # Skip further processing for this step
 
             # Replace parameters with {string}
-            description_with_params = re.sub(r'"([^"]*)"', r'{string}', description)
+            description_with_params = re.sub(r'"?<[^>]+>"?', r'{string}', description)
 
             # Create a method name from the description
             method_name = re.sub(r'[^a-zA-Z0-9]', '_', description.replace(' ', '_'))
             method_name = re.sub(r'_+', '_', method_name).strip('_')  # Remove extra underscores
 
             # Extract parameter names from description
-            param_names = re.findall(r'"([^"]*)"', description)
+            param_names = re.findall(r'"?<[^>]+>"?', description)
             param_declarations = ', '.join(['String string' + str(i + 1) for i in range(len(param_names))])  # Use generic string names
 
             # Check if the step definition already exists
@@ -71,5 +71,5 @@ def index():
 
     return render_template('index.html', gherkin_text=gherkin_text, output=output)
 
-if __name__ == '__main__':
-    app.run(debug=True)
+#if __name__ == '__main__':
+    #app.run(debug=True)
