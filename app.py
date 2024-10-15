@@ -1,13 +1,10 @@
 from flask import Flask, render_template, request, send_file
-import os
 import re
+import os
 
 app = Flask(__name__)
 
-# Define the route to serve the sitemap.xml
-@app.route('/sitemap.xml')
-def sitemap():
-    return send_file(os.path.join(app.static_folder, 'sitemap.xml'))
+
 
 def generate_step_definitions(gherkin_text):
     if not gherkin_text.strip():
@@ -17,8 +14,8 @@ def generate_step_definitions(gherkin_text):
     step_definitions = {}
     output = []
 
-    # Regex to match <param>, "param", and param (including email)
-    param_pattern = re.compile(r'(<[^>]+>|"[^"]+"|[^\s<>]+@[^\s<>]+|[^\s<>]+)')
+    # Regex to match <param>, "param", and param without angle brackets or quotes
+    param_pattern = re.compile(r'(<[^>]+>|"[^"]+"|[^<>\s]+@[^\s]+)')
 
     for line in lines:
         line = line.strip()
@@ -80,5 +77,9 @@ def index():
 
     return render_template('index.html', gherkin_text=gherkin_text, output=output)
 
+@app.route('/sitemap.xml')
+def sitemap():
+    return send_file(os.path.join(app.static_folder, 'sitemap.xml'))
+
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True) 
