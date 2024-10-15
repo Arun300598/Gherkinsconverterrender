@@ -11,6 +11,9 @@ def generate_step_definitions(gherkin_text):
     step_definitions = {}
     output = []
 
+    # Regex to match <param>, "param", and param without angle brackets or quotes
+    param_pattern = re.compile(r'(<[^>]+>|"[^"]+"|[^<>\s]+@[^\s]+)')
+
     for line in lines:
         line = line.strip()
 
@@ -31,15 +34,15 @@ def generate_step_definitions(gherkin_text):
                 output.append(step_definition)
                 continue  # Skip further processing for this step
 
-            # Replace parameters with {string}
-            description_with_params = re.sub(r'"?<[^>]+>"?', r'{string}', description)
+            # Replace parameters with {string} using the param_pattern
+            description_with_params = param_pattern.sub('{string}', description)
 
             # Create a method name from the description
             method_name = re.sub(r'[^a-zA-Z0-9]', '_', description.replace(' ', '_'))
             method_name = re.sub(r'_+', '_', method_name).strip('_')  # Remove extra underscores
 
             # Extract parameter names from description
-            param_names = re.findall(r'"?<[^>]+>"?', description)
+            param_names = re.findall(param_pattern, description)
             param_declarations = ', '.join(['String string' + str(i + 1) for i in range(len(param_names))])  # Use generic string names
 
             # Check if the step definition already exists
